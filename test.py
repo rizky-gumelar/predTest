@@ -81,36 +81,36 @@ if uploaded_file is not None:
         'KNeighbors': KNeighborsRegressor(),
         'PLSRegression': PLSRegression()
     }
+    if optionsx and optionsy is not None:
+        # Visualize predictions for each model on train and test sets
+        for model_name, model in models.items():
+            model.fit(X_train, y_train)
+            # Predictions on train set
+            y_train_pred = model.predict(X_train)
 
-    # Visualize predictions for each model on train and test sets
-    for model_name, model in models.items():
-        model.fit(X_train, y_train)
-        # Predictions on train set
-        y_train_pred = model.predict(X_train)
+            # Predictions on test set
+            y_test_pred = model.predict(X_test)
 
-        # Predictions on test set
-        y_test_pred = model.predict(X_test)
+            # Calculate RMSE and R-Square
+            rmse_train = np.sqrt(mean_squared_error(y_train, y_train_pred))
+            r2_train = r2_score(y_train, y_train_pred)
 
-        # Calculate RMSE and R-Square
-        rmse_train = np.sqrt(mean_squared_error(y_train, y_train_pred))
-        r2_train = r2_score(y_train, y_train_pred)
+            rmse_test = np.sqrt(mean_squared_error(y_test, y_test_pred))
+            r2_test = r2_score(y_test, y_test_pred)
 
-        rmse_test = np.sqrt(mean_squared_error(y_test, y_test_pred))
-        r2_test = r2_score(y_test, y_test_pred)
+            # Plotting
+            plt.figure(figsize=(8, 6))
 
-        # Plotting
-        plt.figure(figsize=(8, 6))
+            plt.scatter(y_train, y_train_pred, label=f'Train ({model_name})\nRMSE: {rmse_train:.3f}, R-Square: {r2_train:.3f}', color='blue', alpha=0.7)
+            plt.scatter(y_test, y_test_pred, label=f'Test ({model_name})\nRMSE: {rmse_test:.3f}, R-Square: {r2_test:.3f}', color='red', alpha=0.7)
 
-        plt.scatter(y_train, y_train_pred, label=f'Train ({model_name})\nRMSE: {rmse_train:.3f}, R-Square: {r2_train:.3f}', color='blue', alpha=0.7)
-        plt.scatter(y_test, y_test_pred, label=f'Test ({model_name})\nRMSE: {rmse_test:.3f}, R-Square: {r2_test:.3f}', color='red', alpha=0.7)
+            plt.plot([min(y_train), max(y_train)], [min(y_train), max(y_train)], '--', color='gray', label='Ideal Line (Train)')
+            plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--', color='black', label='Ideal Line (Test)')
 
-        plt.plot([min(y_train), max(y_train)], [min(y_train), max(y_train)], '--', color='gray', label='Ideal Line (Train)')
-        plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--', color='black', label='Ideal Line (Test)')
+            plt.title(f'Train and Test Set - {model_name}')
+            plt.xlabel('Actual Target Variable')
+            plt.ylabel('Predicted Target Variable')
+            plt.legend()
 
-        plt.title(f'Train and Test Set - {model_name}')
-        plt.xlabel('Actual Target Variable')
-        plt.ylabel('Predicted Target Variable')
-        plt.legend()
-
-        plt.tight_layout()
-        st.pyplot(plt)
+            plt.tight_layout()
+            st.pyplot(plt)
