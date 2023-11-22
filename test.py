@@ -13,6 +13,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
+from PIL import Image
 
 # JUDUL
 st.title("Aplikasi Prediksi Dataset")
@@ -114,3 +115,7 @@ if uploaded_file is not None:
 
             plt.tight_layout()
             st.pyplot(plt)
+
+else:
+        image = Image.open('bg-udinusss.jpeg')
+        st.image(image, caption='SELAMAT DATANG DI APLIKASI PREDIKSI DATASET', use_column_width=True)   
