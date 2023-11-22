@@ -41,16 +41,21 @@ if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)
     else:
         data = pd.read_excel(uploaded_file)
-    st.write(data.head(10))
+    st.table(data.head(10))
     # st.write(file_type)
 
     st.header("Data Column")
-    st.write(data.columns)
+    st.table(data.columns)
 
-    st.write(data.isnull().any())
+    st.table(data.isnull().any())
     
     options = st.multiselect(
     'Pilih kolom fitur (X)',data.columns)
-
     st.write('You selected:', options)
+
+    data_X = data[options]
+
+    X = data_X.values
+    st.header("Kolom Fitur")
+    st.write(X)
 
