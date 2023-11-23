@@ -1,5 +1,4 @@
 import streamlit as st
-from io import StringIO
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import ExtraTreesRegressor, AdaBoostRegressor, GradientBoostingRegressor, RandomForestRegressor
@@ -13,8 +12,6 @@ from sklearn.cross_decomposition import PLSRegression
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 import numpy as np
-from pathlib import Path
-
 from sklearn.preprocessing import LabelEncoder
 
 #JUDUL
@@ -50,6 +47,8 @@ if uploaded_file is not None:
     st.header("Kolom Fitur")
     st.table(data_X.head())
 
+    st.divider()
+
     st.header("Pilih kolom target (Y)")
     options_target = st.multiselect(
     'Pilih kolom target (Y)',data.columns)
@@ -61,41 +60,43 @@ if uploaded_file is not None:
     st.header("Kolom Target")
     st.table(data_Y.head())
 
-    
+    # Split data into train, test sets
+    st.divider()
+    inputTestSize = 20
+    inputTestSize = st.slider("Presentase data",1,100, 20)
 
-    if options is not None and options_target is not None:
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=inputTestSize/100, random_state=42)
 
-        # Split data into train, test sets
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # Define models
+    models = {
+        'ExtraTrees': ExtraTreesRegressor(),
+        'AdaBoost': AdaBoostRegressor(),
+        'GradientBoosting': GradientBoostingRegressor(),
+        'DecisionTree': DecisionTreeRegressor(),
+        'GaussianProcess': GaussianProcessRegressor(),
+        'Linear': LinearRegression(),
+        'Ridge': Ridge(),
+        'Lasso': Lasso(),
+        'Lars': Lars(),
+        'TheilSen': TheilSenRegressor(),
+        'Huber': HuberRegressor(),
+        'PassiveAggressive': PassiveAggressiveRegressor(),
+        'ARD': ARDRegression(),
+        'BayesianRidge': BayesianRidge(),
+        'ElasticNet': ElasticNet(),
+        'OMP': OrthogonalMatchingPursuit(),
+        'SVR': SVR(),
+        'NuSVR': NuSVR(),
+        'LinearSVR': LinearSVR(),
+        'KernelRidge': KernelRidge(),
+        'RandomForest': RandomForestRegressor(),
+        'KNeighbors': KNeighborsRegressor(),
+        'PLSRegression': PLSRegression()
+    }
 
-        # Define models
-        models = {
-            'ExtraTrees': ExtraTreesRegressor(),
-            'AdaBoost': AdaBoostRegressor(),
-            'GradientBoosting': GradientBoostingRegressor(),
-            'DecisionTree': DecisionTreeRegressor(),
-            'GaussianProcess': GaussianProcessRegressor(),
-            'Linear': LinearRegression(),
-            'Ridge': Ridge(),
-            'Lasso': Lasso(),
-            'Lars': Lars(),
-            'TheilSen': TheilSenRegressor(),
-            'Huber': HuberRegressor(),
-            'PassiveAggressive': PassiveAggressiveRegressor(),
-            'ARD': ARDRegression(),
-            'BayesianRidge': BayesianRidge(),
-            'ElasticNet': ElasticNet(),
-            'OMP': OrthogonalMatchingPursuit(),
-            'SVR': SVR(),
-            'NuSVR': NuSVR(),
-            'LinearSVR': LinearSVR(),
-            'KernelRidge': KernelRidge(),
-            'RandomForest': RandomForestRegressor(),
-            'KNeighbors': KNeighborsRegressor(),
-            'PLSRegression': PLSRegression()
-        }
-
+    if options and options_target:
         # Visualize predictions for each model on train and test sets
+        st.divider()
         for model_name, model in models.items():
             model.fit(X_train, y_train)
             # Predictions on train set
