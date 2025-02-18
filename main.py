@@ -15,7 +15,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
 #JUDUL
-st.title("Aplikasi Prediksi Dataset")
+st.title("Instant Machine Learning Prediction")
 
 # UPLOAD DATASET
 uploaded_file = st.file_uploader("Choose a file")
